@@ -1,8 +1,19 @@
 {
-  "name": "Laravel API Dev",
+  "name": "Laravel API",
   "image": "mcr.microsoft.com/devcontainers/php:8.2",
   "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/composer:1": {}
   },
-  "postCreateCommand": "composer create-project laravel/laravel ."
+  "postCreateCommand": "composer install && cp .env.example .env && php artisan key:generate",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "forwardPorts": [8000],
+  "remoteUser": "vscode"
 }
