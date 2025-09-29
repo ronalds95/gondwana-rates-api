@@ -40,4 +40,4 @@ Branching & PR process (mention SonarCloud runs on PRs).
 
 .env.example
 
-Example environment file (if using DB or API keys in future). Keeps things reproducible.
+environment file (if using DB or API keys in future). Keeps things reproducible.
