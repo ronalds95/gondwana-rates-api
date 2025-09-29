@@ -1,0 +1,7 @@
+flowchart TD
+    A[User in Browser] -->|Fill Form| B[Frontend HTML/CSS + JS]
+    B -->|POST JSON| C[Laravel API /api/rates]
+    C -->|Validate + Transform Payload| D[External Gondwana API]
+    D -->|Rates Response| C
+    C -->|Send Structured JSON| B
+    B -->|Render Table| A
