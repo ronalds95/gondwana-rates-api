@@ -182,4 +182,4 @@ This usually means:
 
     Someone forgot to say how old they are
 
-Just check your answers and try again! The app is very patient. 😊
+Just check your answers and try again! The app is very patient. 
