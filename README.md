@@ -3,21 +3,23 @@
 3. Adjust `unitMap` in `api.php` to match your real unit names to the correct Unit Type IDs.
 4. The proxy will forward the converted payload to the remote URL and return the remote response with metadata.
 
+This code also runs here a Backup Server off from Github: https://godwanaapi.adoremedia.club/
 
-🦁 Gondwana Collection Rates App - Super Simple Explanation!
-🎯 What This App Does (The Playground Version)
+
+Gondwana Collection Rates App - Super Simple Explanation!
+What This App Does (The Playground Version)
 
 Imagine you have a magic toy box that can tell you:
 
-    "How much does it cost to stay at a fun lodge?" 🏨
+    "How much does it cost to stay at a fun lodge?" 
 
-    "Is there room for you and your family?" 👨‍👩‍👧‍👦
+    "Is there room for you and your family?" 
 
-    "When can you go play there?" 📅
+    "When can you go play there?" 
 
 That's exactly what this app does! It's like asking a super-smart robot about vacation places.
-🧩 The Two Magic Parts
-Part 1: The "Brain" (api.php) 🧠
+The Two Magic Parts
+Part 1: The "Brain" (api.php) 
 
 This is like the app's thinking brain!
 
@@ -36,7 +38,7 @@ php
 // It's like saying: "Hey computer, can my family stay here?"
 $answer = ask_computer_about_rooms($your_family_info);
 
-Part 2: The "Pretty Face" (index.php) 😊
+Part 2: The "Pretty Face" (index.php) 
 
 This is what you see and click on!
 
@@ -53,7 +55,7 @@ What it does:
 html
 
 <!-- It's like a colorful playground you can click on! -->
-<button>🎯 Check Prices!</button>
+<button> Check Prices!</button>
 
 🎮 How to Play With It
 Step 1: Tell the App About Your Trip
@@ -66,12 +68,12 @@ text
 ☐ Etosha Safari Camp     (animal watching!)
 
 "When:"
-📅 Arrive: 01/10/2025
-📅 Leave:  05/10/2025
+Arrive: 01/10/2025
+Leave:  05/10/2025
 
 "Who's coming:"
-👨 Dad (34 years old)
-👧 Daughter (8 years old)
+Dad (34 years old)
+Daughter (8 years old)
 
 Step 2: Click the Magic Button!
 javascript
@@ -87,15 +89,15 @@ Step 3: See the Answer!
 The app shows you:
 text
 
-🎉 SUCCESS! Here's your answer:
+SUCCESS! Here's your answer:
 
-🏨 Kalahari Anib Lodge
-💰 Price: NAD 130,000 (that's like 130,000 candy bars!)
-📅 Stay: 4 nights of fun!
-✅ Available: YES! You can go! 🎊
-👨‍👧 Family: 2 people (1 grown-up, 1 kid)
+Kalahari Anib Lodge
+Price: NAD 130,000 (that's like 130,000 candy bars!)
+Stay: 4 nights of fun!
+Available: YES! You can go! 
+Family: 2 people (1 grown-up, 1 kid)
 
-🎨 Why It Looks So Pretty
+Why It Looks So Pretty
 
 The app wears Gondwana's favorite colors:
 
@@ -115,8 +117,8 @@ It has:
 
     Happy messages when things work
 
-🔧 How the Magic Works (Behind the Scenes)
-The "Secret Handshake" 🤝
+How the Magic Works (Behind the Scenes)
+The "Secret Handshake" 
 
     You fill out the form → "I want to go here with my family!"
 
@@ -124,9 +126,9 @@ The "Secret Handshake" 🤝
 
     Gondwana's computer answers → "Yes! It costs NAD 130,000"
 
-    The pretty face shows you → "Yay! Here's your vacation price! 🎉"
+    The pretty face shows you → "Yay! Here's your vacation price! 
 
-The "Language Translation" 🌐
+The "Language Translation" 
 
 Your answers get changed into computer talk:
 text
@@ -140,7 +142,7 @@ Computer understands: "Adult"
 You say: "8 years old"  
 Computer understands: "Child"
 
-🚀 How to Make It Work
+How to Make It Work
 Super Easy Steps:
 
     Put both files in the same folder (like putting toys in the same box)
@@ -153,7 +155,7 @@ Super Easy Steps:
 
     Start playing with the form! 🎮
 
-🎁 What Makes This App Special
+What Makes This App Special
 
     It's like a friendly robot that helps plan vacations
 
@@ -165,7 +167,7 @@ Super Easy Steps:
 
     It never gets tired of helping you plan fun trips!
 
-📞 If the App Gets Confused
+If the App Gets Confused
 
 Sometimes the app might say:
 text
@@ -174,10 +176,10 @@ text
 
 This usually means:
 
-    The big Gondwana computer is sleeping 💤
+    The big Gondwana computer is sleeping 
 
     The dates are mixed up (like trying to leave before you arrive!)
 
-    Someone forgot to say how old they are 👶
+    Someone forgot to say how old they are
 
 Just check your answers and try again! The app is very patient. 😊
