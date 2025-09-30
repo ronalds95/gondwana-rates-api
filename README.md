@@ -1,43 +1,4 @@
-# gondwana-rates-api
-Godwana Application
-
-
-ritical Documentation for This Project
-
-README.md (root of repo)
-
-Setup instructions (how to run on Codespaces / local).
-
-API usage (endpoint, payload, sample response).
-
-Frontend usage (how to open /rates and test).
-
-Notes about SonarCloud + GitHub Actions.
-
-API Specification (api-docs.md or inside README)
-
-Endpoint: /api/rates
-
-Method: POST
-
-Request JSON schema
-
-Response JSON schema
-
-Example request & response
-
-Flowchart / System Diagram (docs/architecture.png or .md)
-
-Show data flow from Frontend → Laravel API → External Gondwana API → Response back to UI.
-
-Development Notes (CONTRIBUTING.md — optional)
-
-Coding standards (PSR-12).
-
-Testing strategy (PHPUnit).
-
-Branching & PR process (mention SonarCloud runs on PRs).
-
-.env.example
-
-environment file (if using DB or API keys in future). Keeps things reproducible.
+1. Put `api.php` and `index.html` in the same folder on a PHP-capable server.
+2. Run locally for testing: `php -S localhost:8000` and open `http://localhost:8000/index.html`.
+3. Adjust `unitMap` in `api.php` to match your real unit names to the correct Unit Type IDs.
+4. The proxy will forward the converted payload to the remote URL and return the remote response with metadata.
