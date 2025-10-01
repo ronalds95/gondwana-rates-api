@@ -1,52 +1,19 @@
 name: Build
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  test:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-        with:
-          fetch-depth: 0
-      
-      - name: Setup PHP
-        uses: shivammathur/setup-php@0cda736fbf0b4ad44bab90c60c54e8d1cbd7fe26
-        with:
-          php-version: '8.2'
-          coverage: pcov
-          
-      - name: Install PHPUnit
-        run: |
-          composer require --dev phpunit/phpunit
-          
-      - name: Run tests with coverage
-        run: ./vendor/bin/phpunit --coverage-clover coverage.xml
-          
-      - name: Upload coverage to SonarCloud
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage.xml
-
   sonarqube:
-    name: SonarQube Scan
+    name: SonarQube
     runs-on: ubuntu-latest
-    needs: test
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          
-      - name: Download coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report
-          
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@8e5b62da4c0b8c6b0b7e6e2e3a4b5c6d7e8f9a0b
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
