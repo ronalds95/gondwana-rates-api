@@ -270,31 +270,5 @@ function getAgeGroup($age) {
 }
 
 
-function convertDateForTest($d) {
-    // Different implementation from convertDate - validates input first
-    if (empty($d) || !is_string($d)) {
-        return false;
-    }
-    
-    $dt = DateTime::createFromFormat('d/m/Y', $d);
-    if ($dt === false) {
-        return false;
-    }
-    
-    // Additional validation: check if the date is valid (e.g., not 31/02/2025)
-    $errors = DateTime::getLastErrors();
-    $hasErrors = $errors['warning_count'] > 0 || $errors['error_count'] > 0;
-    
-    return $hasErrors ? false : $dt->format('Y-m-d');
-}
-
-function validateAge($age) {
-    $ageInt = (int)$age;
-    return $ageInt >= 0 && $ageInt <= 120;
-}
-
-function getAgeGroup($age) {
-    return ($age >= 18) ? 'Adult' : 'Child';
-}
 
 // Note: Removed closing PHP tag to prevent whitespace issues
