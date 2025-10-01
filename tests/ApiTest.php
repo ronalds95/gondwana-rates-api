@@ -1,9 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-// Include your API functions
-require_once __DIR__ . '/../api.php';
-
 class ApiTest extends TestCase
 {
     public function testDateConversion()
@@ -20,22 +17,20 @@ class ApiTest extends TestCase
     public function testAgeGroupClassification()
     {
         // Test adult
-        $this->assertEquals('Adult', ($age = 25) >= 18 ? 'Adult' : 'Child');
+        $this->assertEquals('Adult', (25 >= 18) ? 'Adult' : 'Child');
         
         // Test child
-        $this->assertEquals('Child', ($age = 17) >= 18 ? 'Adult' : 'Child');
+        $this->assertEquals('Child', (17 >= 18) ? 'Adult' : 'Child');
     }
     
     public function testUnitMappingLogic()
     {
-        $testIds = [-2147483637, -2147483456];
-        
         // Test that unit names containing 1 map to first ID
         $unitName = 'Unit with number 1';
         $hasOne = preg_match('/\b1\b/', $unitName) || str_contains($unitName, '1');
         $this->assertTrue($hasOne);
         
-        // Test that unit names containing 2 map to second ID  
+        // Test that unit names containing 2 map to second ID
         $unitName = 'Unit with number 2';
         $hasTwo = preg_match('/\b2\b/', $unitName) || str_contains($unitName, '2');
         $this->assertTrue($hasTwo);
@@ -45,14 +40,14 @@ class ApiTest extends TestCase
     {
         // Test valid ages
         $validAges = [25, 18, 17, 5, 0];
-        foreach ($validAges as $age) {
-            $this->assertTrue($age >= 0 && $age <= 120);
+        foreach ($validAges as $validAge) {
+            $this->assertTrue($validAge >= 0 && $validAge <= 120);
         }
         
         // Test invalid ages
         $invalidAges = [-1, 121, 150];
-        foreach ($invalidAges as $age) {
-            $this->assertFalse($age >= 0 && $age <= 120);
+        foreach ($invalidAges as $invalidAge) {
+            $this->assertFalse($invalidAge >= 0 && $invalidAge <= 120);
         }
     }
     
@@ -73,5 +68,39 @@ class ApiTest extends TestCase
         $this->assertContains('Unit Name', $required);
         $this->assertContains('Arrival', $required);
     }
+    
+    public function testConvertDateForTestFunction()
+    {
+        // Test the enhanced date conversion function
+        $result = convertDateForTest('01/10/2025');
+        $this->assertEquals('2025-10-01', $result);
+        
+        // Test invalid date
+        $result = convertDateForTest('invalid-date');
+        $this->assertFalse($result);
+        
+        // Test empty input
+        $result = convertDateForTest('');
+        $this->assertFalse($result);
+    }
+    
+    public function testValidateAgeFunction()
+    {
+        $this->assertTrue(validateAge(25));
+        $this->assertTrue(validateAge(0));
+        $this->assertTrue(validateAge(120));
+        $this->assertFalse(validateAge(-1));
+        $this->assertFalse(validateAge(121));
+    }
+    
+    public function testGetAgeGroupFunction()
+    {
+        $this->assertEquals('Adult', getAgeGroup(25));
+        $this->assertEquals('Adult', getAgeGroup(18));
+        $this->assertEquals('Child', getAgeGroup(17));
+        $this->assertEquals('Child', getAgeGroup(5));
+    }
 }
-?>
+
+// Include your API functions at the end, outside the class
+require_once __DIR__ . '/../api.php';
