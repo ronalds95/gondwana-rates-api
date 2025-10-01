@@ -206,7 +206,7 @@ curl_close($ch);
 if ($responseBody === false) {
     http_response_code(502);
     echo json_encode([
-        'error' => 'Failed to contact remote API', 
+        'error' => 'Failed to contact remote API',
         'curl_error' => $curlErr,
         'remote_url' => $remoteUrl
     ]);
@@ -268,3 +268,5 @@ function validateAge($age) {
 function getAgeGroup($age) {
     return ($age >= 18) ? 'Adult' : 'Child';
 }
+
+// Note: Removed closing PHP tag to prevent whitespace issues
