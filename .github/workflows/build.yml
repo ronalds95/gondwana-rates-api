@@ -6,13 +6,49 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonarqube:
-    name: SonarQube
+  test:
+    name: Run Tests with Coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@0cda736fbf0b4ad44bab90c60c54e8d1cbd7fe26  # v2.28.0
+        with:
+          php-version: '8.2'
+          coverage: pcov
+          tools: composer
+          
+      - name: Install dependencies
+        run: composer install
+      
+      - name: Run PHPUnit with coverage
+        run: vendor/bin/phpunit --coverage-clover coverage.xml
+
+  sonarqube:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          fetch-depth: 0
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@0cda736fbf0b4ad44bab90c60c54e8d1cbd7fe26  # v2.28.0
+        with:
+          php-version: '8.2'
+          
+      - name: Install dependencies
+        run: composer install
+      
+      - name: Run tests with coverage
+        run: vendor/bin/phpunit --coverage-clover coverage.xml
+      
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
