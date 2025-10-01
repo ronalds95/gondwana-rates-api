@@ -8,17 +8,15 @@ jobs:
   sonarqube:
     name: SonarQube
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .devcontainer/apiratesapp
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
-      - name: Change to project directory
-        run: cd .devcontainer/apiratesapp
-      
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: .devcontainer/apiratesapp
