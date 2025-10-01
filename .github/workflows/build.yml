@@ -13,6 +13,9 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Change to project directory
+        run: cd .devcontainer/apiratesapp
+      
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
