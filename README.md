@@ -3,5 +3,8 @@
 3. Adjust `unitMap` in `api.php` to match your real unit names to the correct Unit Type IDs.
 4. The proxy will forward the converted payload to the remote URL and return the remote response with metadata.
 
+
+Run project on root folder php -S localhost:8000 , on codespaces
+
 This code also runs here a Backup Server off from Github: https://godwanaapi.adoremedia.club/
 
