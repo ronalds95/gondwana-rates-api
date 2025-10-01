@@ -476,39 +476,109 @@
     const summaryDiv = document.getElementById('summary');
     const rawPre = document.getElementById('raw');
 
-    form.addEventListener('submit', async (e) => {
+    // Helper functions to reduce complexity
+    function validateFormDates() {
+      const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+      const arrival = document.getElementById('arrival').value;
+      const departure = document.getElementById('departure').value;
+      
+      return dateRegex.test(arrival) && dateRegex.test(departure);
+    }
+
+    function validateAgesInput() {
+      const agesInput = document.getElementById('ages').value;
+      const agesArray = agesInput.split(',').map(s => Number.parseInt(s.trim(), 10)).filter(n => !Number.isNaN(n));
+      return agesArray.length > 0 ? agesArray : null;
+    }
+
+    function validateOccupantsMatch(agesArray) {
+      const occupants = Number.parseInt(document.getElementById('occupants').value, 10);
+      return agesArray.length === occupants;
+    }
+
+    function buildPayload() {
+      const agesArray = validateAgesInput();
+      return {
+        'Unit Name': document.getElementById('unitName').value,
+        'Arrival': document.getElementById('arrival').value,
+        'Departure': document.getElementById('departure').value,
+        'Occupants': Number.parseInt(document.getElementById('occupants').value, 10),
+        'Ages': agesArray,
+      };
+    }
+
+    function extractRateInfo(remote) {
+      if (!remote || typeof remote !== 'object') {
+        return { rate: 'N/A', availability: 'Unknown', currency: '' };
+      }
+
+      const rate = remote.Rate ?? remote.rate ?? remote.Price ?? remote.price ?? remote.Total ?? remote.total ?? 'N/A';
+      const currency = remote.Currency ?? remote.currency ?? '';
+      
+      // Extract availability with clear logic (no nested ternary)
+      let availability = 'Unknown';
+      if (remote.Availability !== undefined) {
+        availability = remote.Availability;
+      } else if (remote.availability !== undefined) {
+        availability = remote.availability;
+      } else if (remote.available !== undefined) {
+        availability = remote.available;
+      } else if (remote.success !== undefined) {
+        availability = remote.success ? 'Available' : 'Unavailable';
+      } else if (remote.error !== undefined) {
+        availability = 'Unavailable';
+      }
+
+      return { rate, availability, currency };
+    }
+
+    function formatAvailability(availability) {
+      if (availability === 'Available' || availability === true) {
+        return '<span style="color: #155724; font-weight: 600;">Available</span>';
+      } else if (availability === 'Unavailable' || availability === false) {
+        return '<span style="color: #721c24; font-weight: 600;">Not Available</span>';
+      }
+      return availability;
+    }
+
+    function createSummaryTable(payload, rateInfo, dateRange) {
+      const rateDisplay = rateInfo.rate !== 'N/A' && rateInfo.currency ? 
+                         `${rateInfo.currency} ${rateInfo.rate}` : rateInfo.rate;
+      
+      const formattedAvailability = formatAvailability(rateInfo.availability);
+
+      return `
+        <table>
+          <tr><th>Accommodation</th><td>${payload['Unit Name']}</td></tr>
+          <tr><th>Total Rate</th><td style="font-weight: 600; font-size: 18px; color: var(--primary);">${rateDisplay}</td></tr>
+          <tr><th>Stay Duration</th><td>${dateRange}</td></tr>
+          <tr><th>Availability</th><td>${formattedAvailability}</td></tr>
+          <tr><th>Guests</th><td>${payload.Occupants} (Ages: ${payload.Ages.join(', ')})</td></tr>
+        </table>
+      `;
+    }
+
+    async function handleFormSubmit(e) {
       e.preventDefault();
       
-      // Validate dates
-      const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-      if (!dateRegex.test(document.getElementById('arrival').value) || 
-          !dateRegex.test(document.getElementById('departure').value)) {
+      // Validate form inputs
+      if (!validateFormDates()) {
         showError('Please enter dates in dd/mm/yyyy format');
         return;
       }
 
-      // Validate ages
-      const agesInput = document.getElementById('ages').value;
-      const agesArray = agesInput.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
-      if (agesArray.length === 0) {
+      const agesArray = validateAgesInput();
+      if (!agesArray) {
         showError('Please enter valid ages as comma-separated numbers');
         return;
       }
 
-      const occupants = parseInt(document.getElementById('occupants').value, 10);
-      if (agesArray.length !== occupants) {
-        showError(`Number of ages (${agesArray.length}) does not match number of guests (${occupants})`);
+      if (!validateOccupantsMatch(agesArray)) {
+        showError(`Number of ages (${agesArray.length}) does not match number of guests (${agesArray.length})`);
         return;
       }
 
-      const payload = {
-        'Unit Name': document.getElementById('unitName').value,
-        'Arrival': document.getElementById('arrival').value,
-        'Departure': document.getElementById('departure').value,
-        'Occupants': occupants,
-        'Ages': agesArray,
-      };
-
+      const payload = buildPayload();
       output.style.display = 'block';
       submitBtn.disabled = true;
       submitBtn.textContent = 'Checking Availability...';
@@ -530,41 +600,12 @@
 
         showStatus('Rates retrieved successfully!', 'success');
 
-        // Extract information from response
+        // Process response
         const remote = data.remote.body_json || {};
-        let rate = 'N/A';
-        let availability = 'Unknown';
-        let currency = '';
-
-        // Try common keys that might hold rates and availability
-        if (remote && typeof remote === 'object') {
-          rate = remote.Rate ?? remote.rate ?? remote.Price ?? remote.price ?? remote.Total ?? remote.total ?? 'N/A';
-          availability = remote.Availability ?? remote.availability ?? remote.available ?? 
-                        (remote.success ? 'Available' : (remote.error ? 'Unavailable' : 'Unknown'));
-          currency = remote.Currency ?? remote.currency ?? '';
-        }
-
+        const rateInfo = extractRateInfo(remote);
         const dateRange = payload.Arrival + ' → ' + payload.Departure;
-        const rateDisplay = rate !== 'N/A' && currency ? `${currency} ${rate}` : rate;
 
-        // Style availability status
-        let availabilityClass = '';
-        if (availability === 'Available' || availability === true) {
-          availability = '<span style="color: #155724; font-weight: 600;">Available</span>';
-        } else if (availability === 'Unavailable' || availability === false) {
-          availability = '<span style="color: #721c24; font-weight: 600;">Not Available</span>';
-        }
-
-        summaryDiv.innerHTML = `
-          <table>
-            <tr><th>Accommodation</th><td>${payload['Unit Name']}</td></tr>
-            <tr><th>Total Rate</th><td style="font-weight: 600; font-size: 18px; color: var(--primary);">${rateDisplay}</td></tr>
-            <tr><th>Stay Duration</th><td>${dateRange}</td></tr>
-            <tr><th>Availability</th><td>${availability}</td></tr>
-            <tr><th>Guests</th><td>${payload.Occupants} (Ages: ${payload.Ages.join(', ')})</td></tr>
-          </table>
-        `;
-
+        summaryDiv.innerHTML = createSummaryTable(payload, rateInfo, dateRange);
         rawPre.textContent = JSON.stringify(data.remote.body_json ?? data.remote.body_raw, null, 2);
 
       } catch (err) {
@@ -575,7 +616,7 @@
         submitBtn.disabled = false;
         submitBtn.textContent = 'Check Availability & Rates';
       }
-    });
+    }
 
     function showStatus(message, type) {
       statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
@@ -588,7 +629,8 @@
       rawPre.textContent = '';
     }
 
-    // Add some basic date validation
+    // Event listeners
+    form.addEventListener('submit', handleFormSubmit);
     document.getElementById('arrival').addEventListener('blur', validateDates);
     document.getElementById('departure').addEventListener('blur', validateDates);
 
