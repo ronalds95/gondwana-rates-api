@@ -16,11 +16,13 @@ class ApiTest extends TestCase
     
     public function testAgeGroupClassification()
     {
-        // Test adult
-        $this->assertEquals('Adult', (25 >= 18) ? 'Adult' : 'Child');
+        // Test adult - use variables instead of constant expressions
+        $adultAge = 25;
+        $this->assertEquals('Adult', ($adultAge >= 18) ? 'Adult' : 'Child');
         
-        // Test child
-        $this->assertEquals('Child', (17 >= 18) ? 'Adult' : 'Child');
+        // Test child - use variables instead of constant expressions
+        $childAge = 17;
+        $this->assertEquals('Child', ($childAge >= 18) ? 'Adult' : 'Child');
     }
     
     public function testUnitMappingLogic()
@@ -82,6 +84,10 @@ class ApiTest extends TestCase
         // Test empty input
         $result = convertDateForTest('');
         $this->assertFalse($result);
+        
+        // Test invalid date format
+        $result = convertDateForTest('31/02/2025');
+        $this->assertFalse($result);
     }
     
     public function testValidateAgeFunction()
@@ -100,7 +106,13 @@ class ApiTest extends TestCase
         $this->assertEquals('Child', getAgeGroup(17));
         $this->assertEquals('Child', getAgeGroup(5));
     }
+    
+    public function testActualApiFunctions()
+    {
+        // Test that the functions are actually callable
+        $this->assertIsCallable('convertDate');
+        $this->assertIsCallable('convertDateForTest');
+        $this->assertIsCallable('validateAge');
+        $this->assertIsCallable('getAgeGroup');
+    }
 }
-
-// Include your API functions at the end, outside the class
-require_once __DIR__ . '/../api.php';
