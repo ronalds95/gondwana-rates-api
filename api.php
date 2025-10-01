@@ -122,7 +122,9 @@ if (isset($unitMap[$unitName])) {
 // Convert dates from dd/mm/yyyy to yyyy-mm-dd
 function convertDate($d) {
     $dt = DateTime::createFromFormat('d/m/Y', $d);
-    if ($dt === false) return false;
+    if ($dt === false) {
+        return false;
+    }
     return $dt->format('Y-m-d');
 }
 
@@ -238,9 +240,11 @@ http_response_code($httpStatus >= 400 ? 502 : 200);
 echo json_encode($output, JSON_PRETTY_PRINT);
 
 // Functions exposed for testing (add at the end of the file)
-function convertDate($d) {
+function convertDateForTest($d) {
     $dt = DateTime::createFromFormat('d/m/Y', $d);
-    if ($dt === false) return false;
+    if ($dt === false) {
+        return false;
+    }
     return $dt->format('Y-m-d');
 }
 
@@ -252,4 +256,5 @@ function validateAge($age) {
 function getAgeGroup($age) {
     return ($age >= 18) ? 'Adult' : 'Child';
 }
-?>
+
+// Note: Removed closing PHP tag to prevent whitespace issues
