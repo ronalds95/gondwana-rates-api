@@ -241,10 +241,22 @@ echo json_encode($output, JSON_PRETTY_PRINT);
 
 // Functions exposed for testing (add at the end of the file)
 function convertDateForTest($d) {
+    // Different implementation from convertDate - validates input first
+    if (empty($d) || !is_string($d)) {
+        return false;
+    }
+    
     $dt = DateTime::createFromFormat('d/m/Y', $d);
     if ($dt === false) {
         return false;
     }
+    
+    // Additional validation: check if the date is valid (e.g., not 31/02/2025)
+    $errors = DateTime::getLastErrors();
+    if ($errors['warning_count'] > 0 || $errors['error_count'] > 0) {
+        return false;
+    }
+    
     return $dt->format('Y-m-d');
 }
 
@@ -256,5 +268,3 @@ function validateAge($age) {
 function getAgeGroup($age) {
     return ($age >= 18) ? 'Adult' : 'Child';
 }
-
-// Note: Removed closing PHP tag to prevent whitespace issues
