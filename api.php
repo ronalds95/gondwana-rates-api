@@ -236,4 +236,20 @@ http_response_code($httpStatus >= 400 ? 502 : 200);
 
 // Return the response
 echo json_encode($output, JSON_PRETTY_PRINT);
+
+// Functions exposed for testing (add at the end of the file)
+function convertDate($d) {
+    $dt = DateTime::createFromFormat('d/m/Y', $d);
+    if ($dt === false) return false;
+    return $dt->format('Y-m-d');
+}
+
+function validateAge($age) {
+    $ageInt = (int)$age;
+    return $ageInt >= 0 && $ageInt <= 120;
+}
+
+function getAgeGroup($age) {
+    return ($age >= 18) ? 'Adult' : 'Child';
+}
 ?>
